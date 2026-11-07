@@ -1,0 +1,1075 @@
+# MASTER PROMPT: MATHVERSE X
+## Build an Enterprise-Grade Multidimensional Mathematical Visualization & Computational Studio
+
+### 1. YOUR ROLE
+
+Act as a principal software architect, computational mathematician, numerical-analysis engineer, scientific visualization specialist, graphics programmer, UI/UX designer, and full-stack developer.
+
+Your mission is to design and develop **MATHVERSE X**, a complete mathematical visualization and computational environment inspired by MATLAB, Wolfram Mathematica, GNU Octave, GeoGebra, Desmos, and advanced scientific visualization platforms.
+
+This must be a real, working software product, not a static dashboard, UI prototype, or collection of disconnected demonstrations.
+
+Build a mathematically reliable, extensible, high-performance application that allows users to define, calculate, visualize, transform, analyze, animate, and export mathematical objects across multiple dimensions.
+
+### 2. PRODUCT VISION
+
+The software must support mathematical exploration across:
+
+- 1D: Number lines, scalar functions, sequences and transformations.
+- 2D: Cartesian, polar and parametric graphs.
+- 3D: Surfaces, solids, curves, vector fields and coordinate systems.
+- 4D: Hyperplanes, hypersurfaces, tesseracts and 4D transformations.
+- ND: Generalized multidimensional functions, tensors, projections, slices and dimensionality reduction.
+
+The software must support both beginner-friendly graphing and advanced research-level mathematical visualization.
+
+### 3. TECHNOLOGY ARCHITECTURE
+
+Choose a modular architecture with clearly separated mathematical computation, rendering, application state, UI and data layers.
+
+**Recommended technology stack:**
+
+Frontend:
+- React + TypeScript.
+- Vite.
+- Tailwind CSS.
+- Three.js with React Three Fiber for 3D.
+- Plotly.js or a dedicated WebGL renderer for scientific plotting.
+- MathLive for mathematical expression input.
+- KaTeX for mathematical rendering.
+- Zustand for application state.
+- Web Workers for expensive calculations.
+
+Backend:
+- Python 3.12+.
+- FastAPI.
+- NumPy.
+- SciPy.
+- SymPy.
+- Pandas.
+- scikit-learn for selected dimensionality-reduction algorithms.
+- Optional PyTorch integration for advanced computational extensions.
+
+Desktop:
+- Tauri with a native desktop shell.
+- Windows support as a first-class target.
+- Local-first execution wherever possible.
+
+Rendering:
+- WebGL2 as a baseline.
+- WebGPU as an optional accelerated renderer.
+- Three.js for 3D scene management.
+- Custom shaders for advanced scientific visualization.
+
+Storage:
+- SQLite for local projects and settings.
+- JSON for portable mathematical project files.
+- CSV, TXT, NumPy and other scientific data formats.
+
+Do not unnecessarily send every calculation to the backend. Simple calculations and interactive visualization should run locally whenever practical.
+
+### 4. COMPLETE APPLICATION WORKSPACE
+
+Create a professional scientific-computing interface.
+
+The interface should contain:
+
+**A. Main toolbar**
+- New project.
+- Open project.
+- Save and Save As.
+- Undo and redo.
+- Import and export.
+- Graph execution.
+- Clear workspace.
+- Settings.
+- Help and documentation.
+
+**B. Left mathematical explorer**
+- 2D plots.
+- 3D plots.
+- Multidimensional plots.
+- Coordinate geometry.
+- Parametric equations.
+- Vector fields.
+- Complex functions.
+- Matrices and tensors.
+- Differential equations.
+- Numerical methods.
+- Transformations.
+- Data visualization.
+
+**C. Central visualization canvas**
+
+The main area must support:
+- Multiple graph panels.
+- Resizable and movable panels.
+- Split-screen comparisons.
+- Independent camera controls.
+- Synchronized axes.
+- Multiple graph layers.
+- Zoom, pan and rotation.
+- Object selection.
+- Interactive inspection.
+- Full-screen visualization.
+
+**D. Right properties inspector**
+- Equation properties.
+- Coordinate settings.
+- Color and appearance.
+- Projection settings.
+- Camera parameters.
+- Mathematical domain.
+- Sampling resolution.
+- Rendering quality.
+- Animation settings.
+- Object transformations.
+
+**E. Bottom computation console**
+- Mathematical input.
+- Expression evaluation.
+- Numerical results.
+- Symbolic results.
+- Execution history.
+- Errors and warnings.
+- Variable inspector.
+
+Every panel must be functional and interconnected.
+
+---
+
+# 5. ADVANCED 2D GRAPHING ENGINE
+
+Implement a complete 2D mathematical plotting system.
+
+### Graph types
+
+1. Cartesian functions: y = f(x).
+2. Implicit equations: F(x,y) = 0.
+3. Parametric curves: x(t), y(t).
+4. Polar curves: r = f(θ).
+5. Piecewise functions.
+6. Inequalities and shaded regions.
+7. Complex-plane plots.
+8. Contour plots.
+9. Density plots.
+10. Heatmaps.
+11. Vector fields.
+12. Direction fields.
+13. Discrete sequences.
+14. Scatter plots.
+15. Statistical distributions.
+16. Multiple function comparisons.
+
+### Advanced capabilities
+
+- Automatic domain detection where mathematically possible.
+- Discontinuity handling.
+- Adaptive sampling.
+- Asymptote and singularity visualization.
+- Root and intersection detection.
+- Derivative visualization.
+- Tangent and normal construction.
+- Curvature analysis.
+- Area between curves.
+- Arc-length calculations.
+- Numerical integration.
+- Coordinate transformations.
+- Dynamic parameter sliders.
+- Function composition visualization.
+
+### Trigonometric visualization
+
+Provide a dedicated trigonometry environment with:
+
+- Sine, cosine and tangent.
+- Inverse trigonometric functions.
+- Hyperbolic functions.
+- Polar trigonometric curves.
+- Lissajous curves.
+- Rose curves.
+- Spiral curves.
+- Phase plots.
+- Fourier series visualization.
+- Harmonic superposition.
+- Animated unit-circle interpretation.
+
+Allow users to animate parameters and observe how graph geometry changes.
+
+---
+
+# 6. ADVANCED 3D GRAPHING ENGINE
+
+Build a professional 3D scientific visualization engine.
+
+### 3D graph types
+
+1. Explicit surfaces: z = f(x,y).
+2. Implicit surfaces: F(x,y,z) = 0.
+3. Parametric surfaces: r(u,v).
+4. Parametric curves: r(t).
+5. Polar and cylindrical surfaces.
+6. Spherical-coordinate surfaces.
+7. Vector fields.
+8. Scalar fields.
+9. Contour surfaces.
+10. Mesh surfaces.
+11. Wireframe surfaces.
+12. Point clouds.
+13. Volumetric datasets.
+14. Isosurfaces.
+15. Mathematical solids.
+16. Trajectories and particle systems.
+
+### Surface visualization
+
+Implement:
+- Smooth shaded surfaces.
+- Wireframe overlays.
+- Surface transparency.
+- Height-based coloring.
+- Gradient coloring.
+- Normal visualization.
+- Curvature visualization.
+- Surface slicing.
+- Cross-sectional curves.
+- Surface intersections.
+- Boundary visualization.
+- Mesh density control.
+
+### Advanced 3D interactions
+
+- Free camera rotation.
+- Orbit controls.
+- First-person camera.
+- Orthographic camera.
+- Perspective camera.
+- Camera presets.
+- Axis locking.
+- Grid visibility.
+- Multiple lighting modes.
+- Object transformation.
+- Translation.
+- Rotation.
+- Scaling.
+- Reflection.
+- Clipping planes.
+
+Allow multiple mathematical objects to exist inside one 3D scene.
+
+---
+
+# 7. MULTIDIMENSIONAL AND 4D GRAPHING ENGINE
+
+This is one of the most important differentiating features of MATHVERSE X.
+
+Do not restrict the architecture to three-dimensional coordinates.
+
+Implement a generalized N-dimensional mathematical object model.
+
+### 4D mathematical visualization
+
+Support:
+
+- Four-dimensional points.
+- 4D vectors.
+- 4D coordinate systems.
+- 4D hyperplanes.
+- 4D hypersurfaces.
+- Tesseract visualization.
+- 4D hyperspheres.
+- 4D polytopes.
+- 4D parametric objects.
+- 4D trajectories.
+- 4D transformations.
+
+### Higher-dimensional mathematical objects
+
+Support generalized objects in n-dimensional space, subject to computational and visualization limits.
+
+Examples:
+- n-dimensional spheres.
+- Hypercubes.
+- Simplexes.
+- Hyperplanes.
+- Multidimensional ellipsoids.
+- Multidimensional Gaussian distributions.
+- Higher-dimensional vector fields.
+
+### 4D projection system
+
+Implement an independent projection engine.
+
+Include:
+
+**1. Orthographic projection**
+- 3D to 2D.
+- 4D to 3D.
+- 4D to 2D.
+
+**2. Perspective projection**
+- Camera-based perspective.
+- Configurable projection center.
+- Adjustable focal distance.
+- Near and far clipping planes.
+
+**3. Oblique projection**
+- Cavalier.
+- Cabinet.
+- Generalized oblique projection.
+
+**4. Stereographic projection**
+- Projection from a selected hypersphere pole.
+- Adjustable projection center.
+- Singularity handling.
+
+**5. Isometric projection**
+- Standard isometric.
+- Dimetric.
+- Trimetric.
+
+**6. Custom linear projection**
+- User-defined projection matrices.
+- Orthogonal projection.
+- Arbitrary subspace projection.
+
+**7. Dimensionality-reduction visualization**
+- PCA.
+- Kernel PCA.
+- MDS.
+- t-SNE.
+- UMAP as an optional extension.
+
+Clearly distinguish mathematically defined geometric projections from statistical dimensionality-reduction methods.
+
+### 4D rotation engine
+
+Implement rotations in arbitrary coordinate planes:
+
+- XY.
+- XZ.
+- XW.
+- YZ.
+- YW.
+- ZW.
+
+Allow simultaneous rotations across multiple planes.
+
+Create an interactive 4D rotation controller with:
+- Independent rotation sliders.
+- Rotation speed.
+- Animation playback.
+- Rotation direction.
+- Time-based transformations.
+- Reset and camera presets.
+
+### 4D slicing
+
+Allow users to intersect a 4D object with a 3D hyperplane.
+
+For example:
+
+A rotating tesseract should display its changing 3D cross-section.
+
+Provide:
+- Adjustable slicing hyperplane.
+- Slice position.
+- Slice orientation.
+- Animated slice traversal.
+- Cross-section extraction.
+- Slice history.
+- Visualization of changing topology where computationally feasible.
+
+Every projection must be mathematically correct and independently testable.
+
+---
+
+# 8. UNIVERSAL COORDINATE SYSTEMS
+
+Implement coordinate-system switching throughout the application.
+
+2D:
+- Cartesian.
+- Polar.
+- Logarithmic.
+- Parametric.
+
+3D:
+- Cartesian.
+- Cylindrical.
+- Spherical.
+- Custom curvilinear coordinates.
+
+4D and ND:
+- Generalized Cartesian coordinates.
+- Hyperspherical coordinates.
+- Generalized cylindrical representations where defined.
+- User-defined coordinate transformations.
+
+Support:
+- Coordinate conversion.
+- Basis transformation.
+- Coordinate grids.
+- Jacobian calculations.
+- Metric tensors for supported coordinate systems.
+- Coordinate singularity warnings.
+
+---
+
+# 9. ADVANCED PROJECTION LAB
+
+Create a separate workspace named PROJECTION LAB.
+
+It should let users load any supported mathematical object and experiment with different projection methods.
+
+Features:
+- Projection selector.
+- Source dimensionality.
+- Target dimensionality.
+- Projection matrix editor.
+- Matrix visualization.
+- Projection origin.
+- Camera orientation.
+- Perspective depth.
+- Transformation preview.
+- Before-and-after comparison.
+- Animated projection transitions.
+- Export projection matrices.
+
+Provide a live mathematical explanation of the selected transformation.
+
+Users should be able to compare the same object under several projections simultaneously.
+
+---
+
+# 10. SYMBOLIC MATHEMATICS ENGINE
+
+Integrate SymPy into the application.
+
+Support:
+
+- Algebraic simplification.
+- Expansion.
+- Factorization.
+- Equation solving.
+- Differentiation.
+- Integration.
+- Definite integration.
+- Indefinite integration.
+- Partial derivatives.
+- Multiple integrals.
+- Limits.
+- Series expansion.
+- Taylor and Maclaurin series.
+- Laplace transforms.
+- Fourier transforms.
+- Inverse transforms.
+- Matrix operations.
+- Eigenvalues.
+- Eigenvectors.
+- Determinants.
+- Matrix decompositions.
+- Differential equations.
+- Symbolic substitutions.
+
+Display mathematical expressions using proper LaTeX formatting.
+
+Allow the user to visualize symbolic results immediately.
+
+For unsupported symbolic operations, provide an accurate limitation or numerical alternative rather than inventing a result.
+
+---
+
+# 11. NUMERICAL COMPUTATION ENGINE
+
+Integrate NumPy and SciPy.
+
+Implement:
+
+- Numerical differentiation.
+- Numerical integration.
+- Root finding.
+- Optimization.
+- Interpolation.
+- Curve fitting.
+- ODE solvers.
+- PDE-related numerical methods.
+- Eigenvalue computation.
+- Matrix decomposition.
+- Fourier analysis.
+- Numerical stability analysis.
+- Error estimation.
+
+Support configurable precision, tolerances, iteration limits and solver selection.
+
+Display:
+- Computation status.
+- Iterations.
+- Convergence.
+- Residuals.
+- Numerical error estimates where available.
+- Execution time.
+
+---
+
+# 12. VECTOR AND TENSOR FIELD LAB
+
+Create a dedicated advanced field-visualization environment.
+
+### Vector fields
+
+Support 2D and 3D vector fields.
+
+Examples:
+- F(x,y) = (P(x,y), Q(x,y)).
+- F(x,y,z) = (P,Q,R).
+
+Features:
+- Arrow plots.
+- Streamlines.
+- Particle tracing.
+- Direction fields.
+- Field magnitude.
+- Divergence.
+- Curl.
+- Gradient.
+- Flux visualization.
+- Field-line animation.
+
+### Tensor fields
+
+Support tensor-valued functions and selected tensor visualization methods.
+
+Include:
+- Tensor components.
+- Matrix field visualization.
+- Eigenvector directions.
+- Eigenvalue magnitude.
+- Symmetric tensor visualization.
+- Coordinate-dependent tensor components.
+
+---
+
+# 13. COMPLEX ANALYSIS LAB
+
+Build a dedicated complex-function visualization environment.
+
+Support:
+
+- Complex numbers.
+- Complex-plane plots.
+- Real and imaginary components.
+- Magnitude plots.
+- Phase plots.
+- Domain coloring.
+- Complex function transformations.
+- Analytic functions.
+- Zeros and poles.
+- Singularities.
+- Contour integration.
+- Conformal mapping demonstrations.
+
+Allow users to explore how a complex function transforms the complex plane.
+
+Implement domain coloring with configurable hue, brightness and magnitude encoding.
+
+---
+
+# 14. DIFFERENTIAL EQUATION AND DYNAMIC SYSTEM LAB
+
+Implement a mathematical dynamics environment.
+
+Support:
+- First-order ODEs.
+- Higher-order ODEs.
+- Coupled ODE systems.
+- Initial-value problems.
+- Boundary-value problems where supported.
+- Phase portraits.
+- Direction fields.
+- Equilibrium points.
+- Stability analysis.
+- Limit cycles.
+- Trajectory visualization.
+- Parameter-dependent behavior.
+
+Create an interactive time slider and animation controls.
+
+Allow users to observe how changing initial conditions affects system behavior.
+
+---
+
+# 15. PARAMETRIC AND MATHEMATICAL ANIMATION STUDIO
+
+Build an animation environment for mathematical objects.
+
+Features:
+- Time-dependent equations.
+- Animated parameters.
+- Mathematical transformations.
+- Function deformation.
+- Surface evolution.
+- 3D object rotation.
+- 4D rotation.
+- Projection transitions.
+- Particle motion.
+- Differential-equation trajectories.
+- Fourier series convergence animation.
+
+Provide:
+- Timeline.
+- Play/pause.
+- Frame stepping.
+- Playback speed.
+- Keyframes.
+- Parameter interpolation.
+- Looping.
+- Frame export.
+- Video and GIF export.
+
+All animations must be based on actual mathematical calculations.
+
+---
+
+# 16. DATA SCIENCE AND HIGH-DIMENSIONAL VISUALIZATION
+
+Allow users to import datasets and visualize them mathematically.
+
+Support:
+- CSV.
+- Excel.
+- JSON.
+- TXT.
+- NumPy arrays.
+- Other supported scientific formats.
+
+Features:
+- Scatter plots.
+- 3D scatter plots.
+- Parallel-coordinate plots.
+- Correlation matrices.
+- Heatmaps.
+- PCA projections.
+- Clustering visualization.
+- Dimensionality-reduction comparisons.
+- Feature-space exploration.
+- Interactive point selection.
+- Outlier inspection.
+
+Allow users to map dimensions to visual channels such as X, Y, Z, color, size and animation time.
+
+For higher dimensions, provide selectable dimensions, slices and projections instead of pretending that all dimensions can be directly displayed.
+
+---
+
+# 17. ADVANCED INTERACTIVE MATHEMATICAL EXPLORER
+
+This feature should make the application exceptionally useful for mathematical education and research.
+
+A user should be able to:
+
+1. Enter an equation.
+2. Generate its graph.
+3. Modify parameters.
+4. Observe changes instantly.
+5. Calculate derivatives.
+6. Calculate integrals.
+7. Inspect critical points.
+8. Change coordinate systems.
+9. Switch projections.
+10. Generate mathematical animations.
+11. Export the result.
+
+Provide contextual mathematical explanations, not just numerical outputs.
+
+For example, if the user enters:
+
+z = sin(x)cos(y)
+
+The system should allow:
+- 3D surface generation.
+- Contour visualization.
+- Gradient field.
+- Cross-sectional curves.
+- Partial derivative calculations.
+- Surface rotation.
+- Orthographic projection.
+- Perspective projection.
+- Animated parameter changes.
+
+---
+
+# 18. VISUAL DESIGN SYSTEM
+
+Create a premium scientific software interface.
+
+Design direction:
+
+- Professional scientific computing environment.
+- Dark graphite interface.
+- Subtle blue/cyan accents.
+- High-contrast mathematical canvas.
+- Precise grid lines.
+- Clean typography.
+- Compact but readable panels.
+- Sophisticated scientific visualization.
+- Smooth transitions.
+- Minimal unnecessary decoration.
+
+Do not make it look like a gaming dashboard.
+
+Avoid excessive neon, glowing borders, decorative animations and generic AI-generated dashboard aesthetics.
+
+The mathematical visualization must be the primary focus.
+
+Provide:
+- Dark mode.
+- Light mode.
+- Custom graph themes.
+- Adjustable font sizes.
+- Accessibility settings.
+
+---
+
+# 19. PERFORMANCE AND COMPUTATIONAL RELIABILITY
+
+Performance is a critical requirement.
+
+Implement:
+
+- Adaptive sampling.
+- Level of detail.
+- GPU acceleration.
+- Web Workers.
+- Asynchronous computation.
+- Rendering throttling.
+- Caching.
+- Memory management.
+- Progressive visualization.
+- Efficient mesh generation.
+- Spatial data structures where useful.
+- Cancellation of long-running computations.
+
+The system must remain responsive while users rotate 3D objects, animate surfaces and modify parameters.
+
+Provide adjustable quality settings.
+
+For extremely high-dimensional calculations, implement explicit memory and computational limits.
+
+Never silently freeze the application.
+
+---
+
+# 20. PROJECT AND WORKSPACE MANAGEMENT
+
+Allow users to:
+
+- Create projects.
+- Save mathematical expressions.
+- Save graph configurations.
+- Save visualization scenes.
+- Save camera positions.
+- Save projection settings.
+- Organize graphs into folders.
+- Duplicate visualization panels.
+- Reopen previous sessions.
+- Export entire projects.
+
+Create a portable project format containing:
+- Equations.
+- Variables.
+- Parameters.
+- Mathematical objects.
+- Coordinate systems.
+- Projection configurations.
+- Visualization settings.
+- Animation timelines.
+- Dataset references.
+
+---
+
+# 21. EXPORT AND PUBLICATION SYSTEM
+
+Support:
+
+- PNG.
+- SVG.
+- PDF.
+- CSV.
+- JSON.
+- OBJ.
+- STL.
+- PLY.
+- GLTF/GLB.
+- MP4.
+- GIF.
+
+Provide:
+- High-resolution exports.
+- Transparent backgrounds.
+- Publication-quality plots.
+- Custom dimensions.
+- Axis labels.
+- Mathematical annotations.
+- Legends.
+- Camera and projection metadata.
+
+Only offer a format for a particular object when its export implementation is genuinely supported.
+
+---
+
+# 22. EXTENSIBLE PLUGIN ARCHITECTURE
+
+Design the system so that additional mathematical tools can be installed in the future.
+
+Plugin categories:
+- Algebra.
+- Calculus.
+- Geometry.
+- Topology.
+- Differential equations.
+- Numerical analysis.
+- Physics simulations.
+- Statistics.
+- Machine learning.
+- Computational geometry.
+- Scientific visualization.
+
+Define stable interfaces for:
+- Mathematical operators.
+- Object generators.
+- Projection methods.
+- Coordinate systems.
+- Renderers.
+- Numerical solvers.
+- Importers and exporters.
+
+Plugins must be isolated and validated before execution.
+
+---
+
+# 23. TESTING AND MATHEMATICAL VALIDATION
+
+Do not rely on visual appearance as proof of correctness.
+
+Create unit, integration and mathematical validation tests.
+
+Test:
+
+1. Projection matrix correctness.
+2. Coordinate transformations.
+3. 4D rotation matrices.
+4. Matrix multiplication.
+5. Symbolic differentiation.
+6. Numerical differentiation.
+7. Integration.
+8. Root finding.
+9. Surface generation.
+10. Parametric curves.
+11. Vector-field calculations.
+12. Complex-function evaluation.
+13. Numerical convergence.
+14. Dataset import and export.
+15. Animation interpolation.
+
+Use analytical reference cases wherever possible.
+
+For example:
+
+- Verify that a rotation preserves Euclidean distance.
+- Verify that orthogonal projection behaves correctly.
+- Verify that a known sphere produces the expected surface.
+- Verify that the derivative of x² is 2x.
+- Verify that a numerical integral converges to a known analytical result.
+
+Include regression tests for previously fixed mathematical and rendering bugs.
+
+---
+
+# 24. DEVELOPMENT PHASES
+
+Do not attempt to implement the entire platform in one unstructured coding pass.
+
+Build the application in these phases.
+
+**PHASE 1 — Foundation**
+- Application shell.
+- Design system.
+- Mathematical expression editor.
+- 2D graphing.
+- Basic numerical computation.
+- Project saving.
+
+**PHASE 2 — 3D Visualization**
+- Three.js integration.
+- Surface plotting.
+- Parametric curves.
+- Implicit surfaces.
+- 3D interactions.
+- Coordinate systems.
+
+**PHASE 3 — Projection Engine**
+- Projection mathematics.
+- Orthographic projection.
+- Perspective projection.
+- Oblique projection.
+- Isometric projection.
+- Custom projection matrices.
+
+**PHASE 4 — 4D and ND**
+- Generalized N-dimensional data model.
+- 4D transformations.
+- Tesseract generation.
+- 4D-to-3D projection.
+- 4D slicing.
+- Higher-dimensional object visualization.
+
+**PHASE 5 — Computational Mathematics**
+- SymPy.
+- SciPy.
+- Calculus.
+- Linear algebra.
+- Differential equations.
+- Vector and tensor fields.
+
+**PHASE 6 — Advanced Visualization**
+- Complex analysis.
+- Dynamic systems.
+- Animation studio.
+- Scientific datasets.
+- Dimensionality reduction.
+
+**PHASE 7 — Production**
+- Performance optimization.
+- Export system.
+- Desktop packaging.
+- Testing.
+- Documentation.
+- Installer.
+- Release build.
+
+Each phase must produce a working, testable application.
+
+---
+
+# 25. DEVELOPMENT RULES
+
+These rules are mandatory.
+
+1. Build a genuine application, not a frontend-only mockup.
+2. Never use hardcoded demonstration values as substitutes for real mathematical computation.
+3. Every button, menu, slider, graph tool and control must have a working implementation.
+4. Do not display fake execution results.
+5. Keep mathematical computations separate from visualization code.
+6. Use reusable, strongly typed components.
+7. Maintain clean frontend and backend architecture.
+8. Implement meaningful error handling.
+9. Never silently ignore unsupported mathematical expressions.
+10. Use actual mathematical algorithms for projections and transformations.
+11. Validate mathematical outputs with independent tests.
+12. Avoid unnecessary dependencies.
+13. Keep the software installable and runnable on Windows.
+14. Maintain a detailed README and installation guide.
+15. Preserve working features while extending the application.
+16. Do not leave major functionality represented by placeholder buttons.
+17. Do not claim a feature is complete until it has been implemented and tested.
+
+### 26. REQUIRED PROJECT STRUCTURE
+
+Organize the project into independent modules.
+
+Suggested architecture:
+
+```text
+mathverse-x/
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── workspace/
+│   │   ├── graphing/
+│   │   │   ├── 2d/
+│   │   │   ├── 3d/
+│   │   │   ├── 4d/
+│   │   │   └── multidimensional/
+│   │   ├── projections/
+│   │   ├── coordinate-systems/
+│   │   ├── animation/
+│   │   ├── scientific-data/
+│   │   ├── mathematics/
+│   │   ├── state/
+│   │   └── styles/
+│   └── package.json
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── symbolic/
+│   │   ├── numerical/
+│   │   ├── calculus/
+│   │   ├── linear_algebra/
+│   │   ├── differential_equations/
+│   │   ├── projections/
+│   │   ├── geometry/
+│   │   ├── multidimensional/
+│   │   └── core/
+│   └── requirements.txt
+│
+├── desktop/
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── mathematical_validation/
+│
+├── examples/
+├── documentation/
+├── scripts/
+└── README.md
+```
+
+Adjust this structure when necessary, but preserve modular separation.
+
+### 27. FINAL ACCEPTANCE CRITERIA
+
+The application is considered ready for its first production release only when:
+
+- 2D mathematical graphing works.
+- 3D mathematical visualization works.
+- 4D objects can be generated and transformed.
+- Projection methods produce mathematically correct outputs.
+- Multidimensional objects can be sliced and inspected.
+- Symbolic and numerical computation work.
+- Graphs can be animated.
+- Mathematical projects can be saved and reopened.
+- Scientific datasets can be imported.
+- Visualizations can be exported.
+- The application runs reliably on Windows.
+- Automated tests pass.
+- Documentation accurately describes implemented functionality.
+
+### 28. YOUR FIRST TASK
+
+Before writing large amounts of code:
+
+1. Analyze the complete requirements.
+2. Design the system architecture.
+3. Identify the most technically challenging components.
+4. Define mathematical interfaces for all graph types.
+5. Design the generalized dimensionality and projection data models.
+6. Prepare the frontend and backend folder structures.
+7. Create a detailed implementation roadmap.
+8. Identify dependencies and version compatibility.
+9. Establish a testing strategy.
+10. Start implementing Phase 1.
+
+After completing each phase:
+- Run the application.
+- Execute automated tests.
+- Fix errors.
+- Verify the actual functionality.
+- Update the documentation.
+- Report completed and pending features accurately.
+
+**Final objective:** Deliver MATHVERSE X as a powerful, extensible mathematical computing and visualization platform that can grow into a serious alternative to conventional mathematical graphing software.
+
+Prioritize mathematical correctness, computational performance, visualization quality, extensibility and user experience over superficial feature count.

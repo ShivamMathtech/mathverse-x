@@ -1,0 +1,32 @@
+{
+  "schema": "mathverse-x",
+  "version": 1,
+  "name": "Wave exploration",
+  "curves": [
+    {
+      "id": "example-wave",
+      "kind": "cartesian",
+      "expression": "a * sin(b * x) + c",
+      "expressionY": "sin(t)",
+      "color": "#83cdbd",
+      "visible": true,
+      "tMin": 0,
+      "tMax": 6.283185307179586
+    }
+  ],
+  "viewport": {
+    "xMin": -8,
+    "xMax": 8,
+    "yMin": -4.5,
+    "yMax": 4.5
+  },
+  "parameters": {
+    "a": 2,
+    "b": 1,
+    "c": 0
+  },
+  "selectedId": "example-wave",
+  "resolution": 480,
+  "grid": true,
+  "axes": true
+}

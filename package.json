@@ -1,0 +1,19 @@
+{
+  "name": "mathverse-x",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-first mathematical visualization and computational studio",
+  "workspaces": [
+    "frontend"
+  ],
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "vite frontend --config frontend/vite.config.ts --host 0.0.0.0",
+    "build": "npm run build --workspace frontend",
+    "preview": "vite preview frontend --config frontend/vite.config.ts --host 0.0.0.0",
+    "test": "npm run test --workspace frontend",
+    "typecheck": "npm run typecheck --workspace frontend"
+  }
+}

@@ -1,0 +1,9 @@
+services:
+  mathverse-api:
+    build: ./backend
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file: ./backend/.env
+    restart: unless-stopped
+    mem_limit: 1g
+    cpus: 2
