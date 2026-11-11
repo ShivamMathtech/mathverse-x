@@ -36,9 +36,11 @@ import { compute } from "./workers/client";
 import type {
   CurveKind,
   NumericResult,
-  SampledCurve,
+  Project,
 } from "./mathematics/types";
 import { Plot } from "./graphing/Plot";
+import { useGraphAnimation } from "./graphing/useGraphAnimation";
+import { Timeline } from "./components/Timeline";
 import { download, exportCSV, exportGraph, slug } from "./graphing/export";
 import { Formula } from "./components/Formula";
 import { Inspector, type NumericOperation } from "./components/Inspector";
@@ -48,9 +50,6 @@ export function App() {
   const store = useWorkspace(),
     { project } = store,
     selected = project.curves.find((c) => c.id === project.selectedId);
-  const [samples, setSamples] = useState<SampledCurve[]>([]),
-    [sampling, setSampling] = useState(true),
-    [sampleError, setSampleError] = useState("");
   const [leftTab, setLeftTab] = useState<"expressions" | "examples">(
       "expressions",
     ),
@@ -87,6 +86,21 @@ export function App() {
     job = useRef<AbortController | null>(null),
     historyId = useRef(0);
   const notify = (text: string) => setNotice(text);
+  const animation = useGraphAnimation(
+    project,
+    showDerivative ? project.selectedId : undefined,
+    showTangent ? { id: project.selectedId, x } : undefined,
+    (time) => {
+      const current = useWorkspace.getState().project;
+      if (current.animation.time !== time)
+        store.update({ animation: { ...current.animation, time } }, false);
+    },
+  );
+  const { samples, sampling, error: sampleError } = animation;
+  function replaceProject(next: Project) {
+    animation.pause();
+    store.replace(next);
+  }
   useEffect(() => {
     document.documentElement.dataset.theme = light ? "light" : "dark";
     try {
@@ -124,48 +138,17 @@ export function App() {
     }, 400);
     return () => clearTimeout(timer);
   }, [project]);
-  useEffect(() => {
-    const controller = new AbortController();
-    setSampling(true);
-    setSampleError("");
-    const timer = setTimeout(() => {
-      compute<SampledCurve[]>(
-        {
-          type: "sample",
-          payload: {
-            project,
-            derivativeId: showDerivative ? project.selectedId : undefined,
-            tangent: showTangent ? { id: project.selectedId, x } : undefined,
-          },
-        },
-        controller.signal,
-      )
-        .then(setSamples)
-        .catch((e) => {
-          if (e.name !== "AbortError") {
-            setSamples([]);
-            setSampleError(e.message);
-          }
-        })
-        .finally(() => {
-          if (!controller.signal.aborted) setSampling(false);
-        });
-    }, 100);
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-  }, [project, showDerivative, showTangent, x]);
   function save() {
+    const time = animation.pause();
     download(
-      JSON.stringify(project, null, 2),
+      JSON.stringify({ ...project, animation: { ...project.animation, time } }, null, 2),
       `${slug(project.name)}.mathverse.json`,
     );
     notify("Project JSON downloaded.");
   }
   function blank() {
     const p = freshProject();
-    store.replace({
+    replaceProject({
       ...p,
       name: "Untitled exploration",
       curves: [],
@@ -177,6 +160,10 @@ export function App() {
   }
   useEffect(() => {
     function key(e: KeyboardEvent) {
+      if (e.code === "Space" && !e.repeat && !modal &&
+          !(e.target as HTMLElement)?.closest("input,textarea,select,button,[contenteditable='true']")) {
+        e.preventDefault(); animation.toggle(); return;
+      }
       if (!(e.ctrlKey || e.metaKey)) return;
       if (e.key === "s") {
         e.preventDefault();
@@ -244,6 +231,7 @@ export function App() {
   }
   async function runNumeric(operation: NumericOperation) {
     if (!selected || selected.kind !== "cartesian") return;
+    const time = animation.pause();
     const controller = startJob(),
       input = `${operation}(${selected.expression})`;
     try {
@@ -253,6 +241,7 @@ export function App() {
           operation,
           expression: selected.expression,
           parameters: project.parameters,
+          time,
           x,
           lo,
           hi,
@@ -262,7 +251,7 @@ export function App() {
       addHistory(
         input,
         Number(r.value.toPrecision(12)).toString(),
-        `${r.method}${r.errorEstimate !== undefined ? ` · est. error ${r.errorEstimate.toExponential(2)}` : ""}${r.residual !== undefined ? ` · residual ${r.residual.toExponential(2)}` : ""}${r.iterations !== undefined ? ` · ${r.iterations} iterations` : ""}${operation === "evaluate" || operation === "derivative" ? ` · x = ${x}` : ` · [${lo}, ${hi}]`}`,
+        `${r.method} · time = ${time.toFixed(3)} s${r.errorEstimate !== undefined ? ` · est. error ${r.errorEstimate.toExponential(2)}` : ""}${r.residual !== undefined ? ` · residual ${r.residual.toExponential(2)}` : ""}${r.iterations !== undefined ? ` · ${r.iterations} iterations` : ""}${operation === "evaluate" || operation === "derivative" ? ` · x = ${x}` : ` · [${lo}, ${hi}]`}`,
       );
       if (operation === "integral") setShowArea(true);
     } catch (e) {
@@ -334,6 +323,7 @@ export function App() {
   }
   async function consoleRun(expression: string, operation: string) {
     if (!expression.trim()) return;
+    const time = animation.pause();
     const controller = startJob(),
       input = `${operation.replace("backend:", "")}(${expression})`;
     try {
@@ -380,6 +370,7 @@ export function App() {
             operation: "evaluate",
             expression,
             parameters: project.parameters,
+            time,
             x,
             lo,
             hi,
@@ -389,7 +380,7 @@ export function App() {
         addHistory(
           expression,
           Number(r.value.toPrecision(12)).toString(),
-          `Browser evaluation · x = ${x}`,
+          `Browser evaluation · x = ${x} · time = ${time.toFixed(3)} s`,
         );
       }
     } catch (e) {
@@ -400,10 +391,13 @@ export function App() {
   }
   async function exportAs(format: "svg" | "png" | "csv") {
     setExportMenu(false);
+    if (sampling || sampleError) { notify("Wait for the graph to finish calculating before exporting."); return; }
+    const time = animation.pause();
+    const snapshot = { ...project, animation: { ...project.animation, time } };
     try {
-      if (format === "csv") exportCSV(samples, project);
+      if (format === "csv") exportCSV(samples, snapshot);
       else if (svgRef.current)
-        await exportGraph(svgRef.current, project, format, light);
+        await exportGraph(svgRef.current, snapshot, format, light);
       notify(`${format.toUpperCase()} export downloaded.`);
     } catch (e) {
       notify(e instanceof Error ? e.message : "Export failed.");
@@ -453,7 +447,7 @@ export function App() {
         >
           <Settings2 size={17} />
         </button>
-        <div className="version-pill">v0.1</div>
+        <div className="version-pill">v0.2</div>
       </header>
       <div className="toolbar">
         <div className="tool-group">
@@ -532,7 +526,7 @@ export function App() {
           try {
             if (f.size > 250000)
               throw new Error("Project file exceeds the 250 KB limit.");
-            store.replace(parseProject(await f.text()));
+            replaceProject(parseProject(await f.text()));
             setHistory([]);
             notify(`Opened ${f.name}`);
           } catch (error) {
@@ -716,7 +710,7 @@ export function App() {
                           </option>
                           <option value="polar">Polar · r = f(θ)</option>
                           <option value="parametric">
-                            Parametric · x(t), y(t)
+                            Parametric · x(u), y(u)
                           </option>
                         </select>
                         {s?.error && (
@@ -753,7 +747,7 @@ export function App() {
                     className="example-card"
                     key={e.name}
                     onClick={() => {
-                      store.replace(exampleProject(i));
+                      replaceProject(exampleProject(i));
                       setShowArea(false);
                       setLeftTab("expressions");
                       setHistory([]);
@@ -766,7 +760,7 @@ export function App() {
                       className={`example-glyph glyph-${i}`}
                       style={{ color: palette[i % palette.length] }}
                     >
-                      {["∿", "✻", "∞", "∿", "⌁", "⌞"][i]}
+                      {["∿", "∿", "✻", "∞", "∿", "✻", "∞", "∿", "⌁", "⌞"][i]}
                     </div>
                     <span>
                       <strong>{e.name}</strong>
@@ -824,11 +818,16 @@ export function App() {
                 : undefined
             }
             onInspect={(value) => {
+              animation.pause();
               setX(Number(value.toPrecision(7)));
               setInspectorTab("calculus");
               setShowInspector(true);
             }}
           />
+          <Timeline settings={project.animation} time={animation.time} playing={animation.playing}
+            fps={animation.fps} toggle={animation.toggle} seek={animation.seek} persist={animation.persist}
+            configure={(settings) => { animation.pause(); store.update({ animation: settings }); }}
+            notify={notify} example={() => { replaceProject(exampleProject(0)); setShowArea(false); setLeftTab("expressions"); }} />
           {sampleError && (
             <div className="graph-error" role="alert">
               {sampleError}
@@ -1019,11 +1018,14 @@ export function App() {
             <h3>Three ways to draw</h3>
             <p>
               <b>Cartesian:</b> y = f(x). <b>Polar:</b> r = f(theta), with t
-              accepted as an alias. <b>Parametric:</b> x(t), y(t). Change the
+              accepted as an alias. <b>Parametric:</b> x(u), y(u), with t accepted for older projects. Change the
               curve type under its expression; edit the parameter domain in
               Properties. Use Equal axis scale on the canvas to preserve
               geometric proportions.
             </p>
+            <h3>Give your graph time</h3>
+            <p>Write <code>sin(x - t)</code> and press Play. The timeline supplies <code>time</code> in every graph type and <code>t</code> in Cartesian graphs. For parametric motion, try <code>cos(u + time)</code>. Scrub, step, change speed, or choose Loop, Back and forth, or Play once in Timeline settings. Space toggles playback outside inputs. Switching tabs pauses the animation.</p>
+            <p>Curve tracing snaps to sampled segments. Fit sampled curves adjusts the view to the finite sampled points. Neither tool claims exact symbolic coordinates.</p>
             <h3>Turn a graph into a calculation</h3>
             <p>
               Select a Cartesian curve and open Calculus. Evaluate a point, draw
@@ -1051,8 +1053,8 @@ export function App() {
               </span>
             </div>
             <p className="muted">
-              v0.1 implements Phase 1. 3D, 4D, Projection Lab, data import,
-              animation and desktop packaging are later roadmap phases.
+              v0.2 extends Phase 1 with time animation. 3D, 4D, Projection Lab, data import,
+              keyframes, video export and desktop packaging are later roadmap phases. Time-driven 2D animation is available now.
             </p>
           </div>
         </Modal>

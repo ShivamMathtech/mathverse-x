@@ -181,6 +181,14 @@ export function Inspector(p: Props) {
                     }
                   />
                 </label>
+                <div className="field-grid curve-style-fields">
+                  <label className="stack-label">Line width<select aria-label="Curve line width" value={selected.lineWidth} onChange={e => curve(selected.id, { lineWidth: Number(e.target.value) })}>
+                    {[1, 2, 2.5, 3, 4, 5, 6, ...([1, 2, 2.5, 3, 4, 5, 6].includes(selected.lineWidth) ? [] : [selected.lineWidth])].sort((a,b) => a-b).map(n => <option value={n} key={n}>{n} px</option>)}
+                  </select></label>
+                  <label className="stack-label">Line style<select aria-label="Curve line style" value={selected.lineStyle} onChange={e => curve(selected.id, { lineStyle: e.target.value as typeof selected.lineStyle })}>
+                    <option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option>
+                  </select></label>
+                </div>
                 {selected.kind !== "cartesian" && (
                   <div className="field-grid">
                     <NumberField
@@ -223,7 +231,7 @@ export function Inspector(p: Props) {
               </div>
               <code className="selected-code">{selected.expression}</code>
               <p className="muted">
-                Results use the current a, b and c values.
+                Results use a, b, c and the displayed time. Calculations pause playback.
               </p>
             </section>
             <section>

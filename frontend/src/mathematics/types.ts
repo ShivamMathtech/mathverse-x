@@ -15,6 +15,16 @@ export interface Curve {
   visible: boolean;
   tMin: number;
   tMax: number;
+  lineWidth: number;
+  lineStyle: "solid" | "dashed" | "dotted";
+}
+export interface AnimationSettings {
+  time: number;
+  start: number;
+  end: number;
+  speed: number;
+  mode: "loop" | "once" | "pingpong";
+  fps: 15 | 30 | 60;
 }
 export interface Project {
   schema: "mathverse-x";
@@ -27,6 +37,7 @@ export interface Project {
   resolution: number;
   grid: boolean;
   axes: boolean;
+  animation: AnimationSettings;
 }
 export interface SampledCurve {
   id: string;
@@ -44,6 +55,7 @@ export interface NumericResult {
 }
 export interface SampleRequest {
   project: Project;
+  time?: number;
   derivativeId?: string;
   tangent?: { id: string; x: number };
 }
@@ -54,6 +66,7 @@ export type ComputeRequest =
       operation: "evaluate" | "derivative" | "integral" | "root";
       expression: string;
       parameters: Project["parameters"];
+      time?: number;
       x: number;
       lo: number;
       hi: number;

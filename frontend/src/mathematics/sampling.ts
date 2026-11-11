@@ -11,15 +11,16 @@ export function sampleCurve(
   curve: Curve,
   project: Project,
   mode: "normal" | "derivative" = "normal",
+  time = project.animation.time,
 ): SampledCurve {
   let evaluations = 0;
   try {
     const variable =
       curve.kind === "cartesian" ? "x" : curve.kind === "polar" ? "theta" : "t";
-    const first = compileScalar(curve.expression, project.parameters, variable);
+    const first = compileScalar(curve.expression, project.parameters, variable, time);
     const second =
       curve.kind === "parametric"
-        ? compileScalar(curve.expressionY, project.parameters, "t")
+        ? compileScalar(curve.expressionY, project.parameters, "t", time)
         : null;
     const [start, end] =
       curve.kind === "cartesian"
@@ -119,20 +120,21 @@ export function sampleProject({
   project,
   derivativeId,
   tangent,
+  time = project.animation.time,
 }: SampleRequest): SampledCurve[] {
   const samples = project.curves
     .filter((c) => c.visible)
-    .map((c) => sampleCurve(c, project));
+    .map((c) => sampleCurve(c, project, "normal", time));
   const derived = project.curves.find(
     (c) => c.id === derivativeId && c.kind === "cartesian" && c.visible,
   );
-  if (derived) samples.push(sampleCurve(derived, project, "derivative"));
+  if (derived) samples.push(sampleCurve(derived, project, "derivative", time));
   const target = project.curves.find(
     (c) => c.id === tangent?.id && c.kind === "cartesian" && c.visible,
   );
   if (target && tangent) {
     try {
-      const f = compileScalar(target.expression, project.parameters).evaluate;
+      const f = compileScalar(target.expression, project.parameters, "x", time).evaluate;
       const y = f(tangent.x),
         slope = numericalDerivative(f, tangent.x).value;
       if (Number.isFinite(y))

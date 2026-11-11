@@ -15,6 +15,15 @@ Target: a usable, independently deployable scientific graphing workspace.
 
 Acceptance: production build; analytical numerical tests; project round-trip and invalid-input tests; API authentication, parser, timeout and operation tests; browser interaction checks where infrastructure permits.
 
+## v0.2 — Animated 2D graph studio (implemented)
+
+- Time-driven Cartesian, polar and parametric curves; legacy parameter aliases retained.
+- Timeline playback, scrubbing, stepping, speed, bounds and loop/once/back-and-forth modes.
+- Reused computation worker, bounded expression compilation cache and one frame in flight.
+- Sampled curve tracing, fit to sampled geometry, minor grid and line styling.
+- Time-aware calculus, CSV/SVG metadata, compatible project migration and animated examples.
+- Keyframes and video encoding remain future work.
+
 ## Phase 2 — 3D visualization
 
 Add Three.js/React Three Fiber; surfaces z=f(x,y); parametric space curves/surfaces; orbit and orthographic cameras; mesh coloring; cylindrical/spherical conversion; independently validated marching cubes. Test sphere radius, mesh indices, normal directions and undefined-domain holes. Export OBJ only after geometry validation.
@@ -33,7 +42,7 @@ Extend the small SymPy API into richer calculus and linear algebra. Add SciPy ro
 
 ## Phase 6 — Advanced visualization
 
-Complex domain coloring, direction fields, coupled ODE phase portraits, animation/keyframes, CSV/NumPy data import and PCA; then other reduction methods. Distinguish geometric projection from learned embeddings. Compare all solvers against independent reference cases.
+Complex domain coloring, direction fields, coupled ODE phase portraits, animation keyframes, CSV/NumPy data import and PCA; then other reduction methods. Distinguish geometric projection from learned embeddings. Compare all solvers against independent reference cases.
 
 ## Phase 7 — Production and desktop
 

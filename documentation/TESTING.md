@@ -7,3 +7,7 @@ Analytical references: d(x²)/dx at x=3 is 6; integral of x² on [0,1] is 1/3; r
 Parser regression cases reject assignments, member access, unknown variables, oversized input and recursive/dynamic evaluation. Project import rejects unsupported versions, invalid bounds, excessive layers and unknown plot kinds. Worker timeouts terminate the worker, and a later request creates a new one.
 
 API tests verify authentication, origin behavior, request validation, algebraic results, safe AST parsing and child-process timeout cleanup. Manual browser checks cover expression edits, layer visibility, pan/zoom, save/reload, examples, calculus controls, theme, exports and the disconnected-backend flow. Document any checks that the environment prevents.
+
+## Animation regressions
+
+`animation.test.ts` checks time-dependent curves against analytical formulas, independent legacy parameter aliases, derivative/tangent snapshots, moving poles, clock boundaries and project migration. `sampler.test.ts` checks one-worker reuse, overlap refusal, cancellation and timeout recovery. `geometry.test.ts` checks interpolation without crossing gaps and fitting. `export.test.ts` checks CSV snapshot time against independently evaluated coordinates.

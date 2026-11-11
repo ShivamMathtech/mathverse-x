@@ -5,7 +5,7 @@ import {
   type RefObject,
   type PointerEvent,
 } from "react";
-import { Plus, Minus, Maximize2, Crosshair, Ratio } from "lucide-react";
+import { Plus, Minus, Maximize2, Crosshair, Ratio, Scan, MousePointer2 } from "lucide-react";
 import type {
   Project,
   SampledCurve,
@@ -13,13 +13,14 @@ import type {
   Point2,
 } from "../mathematics/types";
 import { defaultView, validViewport } from "../state/project";
+import { fitSamples, traceCurve } from "./geometry";
 function stepFor(span: number, target = 10) {
   const raw = span / target,
     p = Math.pow(10, Math.floor(Math.log10(raw)));
   return [1, 2, 5, 10].find((n) => n * p >= raw)! * p;
 }
-function ticks(lo: number, hi: number) {
-  const s = stepFor(hi - lo),
+function ticks(lo: number, hi: number, step = stepFor(hi - lo)) {
+  const s = step,
     values: number[] = [];
   for (
     let x = Math.ceil(lo / s) * s;
@@ -64,7 +65,8 @@ export function Plot({
     } | null>(null);
   const [size, setSize] = useState({ w: 900, h: 540 }),
     [temporary, setTemporary] = useState<Viewport | null>(null),
-    [hover, setHover] = useState<Point2 | null>(null);
+    [hover, setHover] = useState<Point2 | null>(null),
+    [tracing, setTracing] = useState(true);
   const view = temporary ?? project.viewport;
   const { w, h } = size,
     xSpan = view.xMax - view.xMin,
@@ -136,7 +138,9 @@ export function Plot({
     setTemporary(null);
     if (Math.abs(e.clientX - d.px) + Math.abs(e.clientY - d.py) < 4) {
       const r = e.currentTarget.getBoundingClientRect();
-      onInspect(world(e.clientX - r.left, e.clientY - r.top)[0]);
+      const point = world(e.clientX - r.left, e.clientY - r.top);
+      const segments = samples.find(s => s.id === project.selectedId)?.segments ?? [];
+      onInspect((tracing ? traceCurve(segments, point, view, w, h) ?? point : point)[0]);
     } else onView(d.last);
   }
   const foreground = light ? "#485b6a" : "#788994",
@@ -145,6 +149,12 @@ export function Plot({
     bg = light ? "#f7f9fa" : "#0f1419";
   const xTicks = ticks(view.xMin, view.xMax),
     yTicks = ticks(view.yMin, view.yMax);
+  const traced = hover && tracing
+    ? traceCurve(samples.find(s => s.id === project.selectedId)?.segments ?? [], hover, view, w, h)
+    : null;
+  const cursor = traced ?? hover;
+  const traceColor = project.curves.find(c => c.id === project.selectedId)?.color ?? foreground;
+  const fitted = fitSamples(samples.filter(s => project.curves.some(c => c.id === s.id && c.visible)));
   const path = (points: Point2[]) =>
     points
       .map(
@@ -211,6 +221,10 @@ export function Plot({
         </defs>
         {project.grid && (
           <g stroke={grid} strokeWidth="1">
+            <g opacity="0.4">
+              {ticks(view.xMin, view.xMax, stepFor(xSpan) / 5).map(x => <line key={`minor-x${x}`} x1={sx(x)} y1={0} x2={sx(x)} y2={h} />)}
+              {ticks(view.yMin, view.yMax, stepFor(ySpan) / 5).map(y => <line key={`minor-y${y}`} x1={0} y1={sy(y)} x2={w} y2={sy(y)} />)}
+            </g>
             {xTicks.map((x) => (
               <line key={`x${x}`} x1={sx(x)} y1={0} x2={sx(x)} y2={h} />
             ))}
@@ -225,7 +239,7 @@ export function Plot({
             <line x1={0} x2={w} y1={sy(0)} y2={sy(0)} />
           </g>
         )}
-        <g fill={foreground} fontSize="11" fontFamily="ui-monospace,monospace">
+        {project.axes && <g fill={foreground} fontSize="11" fontFamily="ui-monospace,monospace">
           {xTicks
             .filter((x) => x !== 0)
             .map((x) => (
@@ -254,7 +268,7 @@ export function Plot({
           <text x={Math.max(10, Math.min(w - 20, sx(0) + 12))} y={20}>
             y
           </text>
-        </g>
+        </g>}
         <g clipPath="url(#plot-clip)">
           {area &&
             samples
@@ -294,31 +308,31 @@ export function Plot({
                 strokeWidth={
                   sample.id.includes(":")
                     ? 1.6
-                    : c?.id === project.selectedId
-                      ? 2.6
-                      : 2
+                    : (c?.lineWidth ?? 2.5) + (c?.id === project.selectedId ? 0.4 : 0)
                 }
-                strokeDasharray={sample.id.includes(":") ? "6 5" : undefined}
+                strokeDasharray={sample.id.includes(":") ? "6 5" : c?.lineStyle === "dashed" ? "10 6" : c?.lineStyle === "dotted" ? "1 6" : undefined}
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             ));
           })}
-          {hover && (
+          {cursor && (
             <g data-inspection="true">
               <line
-                x1={sx(hover[0])}
-                x2={sx(hover[0])}
+                x1={sx(cursor[0])}
+                x2={sx(cursor[0])}
                 y1={0}
                 y2={h}
                 stroke={axis}
                 strokeDasharray="3 5"
               />
+              <line x1={0} x2={w} y1={sy(cursor[1])} y2={sy(cursor[1])} stroke={axis} strokeDasharray="3 5" />
               <circle
-                cx={sx(hover[0])}
-                cy={sy(hover[1])}
-                r="3"
-                fill={foreground}
+                cx={sx(cursor[0])}
+                cy={sy(cursor[1])}
+                r={traced ? 5 : 3}
+                fill={traced ? traceColor : foreground}
+                stroke={bg} strokeWidth={2}
               />
             </g>
           )}
@@ -329,6 +343,12 @@ export function Plot({
         LIVE CANVAS <span>·</span> 2D
       </div>
       <div className="plot-controls">
+        <button aria-label="Trace selected curve" title="Trace selected curve (sampled approximation)" aria-pressed={tracing} onClick={() => setTracing(!tracing)}>
+          <MousePointer2 size={16} />
+        </button>
+        <button aria-label="Fit sampled curves" title="Fit sampled curves" disabled={!fitted || busy} onClick={() => { if (fitted) onView(fitted); }}>
+          <Scan size={16} />
+        </button>
         <button aria-label="Zoom in" onClick={() => zoom(0.8)}>
           <Plus size={16} />
         </button>
@@ -369,9 +389,9 @@ export function Plot({
           <Maximize2 size={16} />
         </button>
       </div>
-      {hover && (
+      {cursor && (
         <div className="coordinate-readout">
-          x {hover[0].toFixed(3)} <span>y {hover[1].toFixed(3)}</span>
+          {traced ? "Curve ≈ " : "Cursor · "}x {numberLabel(cursor[0])} <span>y {numberLabel(cursor[1])}</span>
         </div>
       )}
       {busy && <div className="sampling-badge">Calculating…</div>}

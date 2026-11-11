@@ -4,9 +4,11 @@
 
 A local-first mathematical visualization and computational studio, built for incremental development into 2D, 3D, 4D and higher-dimensional mathematics.
 
-**Current release: v0.1.0 — Phase 1 foundation.** This is a working graphing and calculus application with an optional Python symbolic service. The complete enterprise platform in the brief is not finished; 3D/4D and the remaining labs are defined in the roadmap.
+**Current release: v0.2.0 — Animated graph studio.** This is a working graphing and calculus application with an optional Python symbolic service. The complete enterprise platform in the brief is not finished; 3D/4D and the remaining labs are defined in the roadmap.
 
 GitHub repository: [ShivamMathtech/mathverse-x](https://github.com/ShivamMathtech/mathverse-x).
+
+![Animated graph studio and timeline controls](documentation/assets/animation-preview.png)
 
 ## Run locally
 
@@ -21,23 +23,26 @@ Open the URL printed by Vite, normally `http://localhost:5173`.
 
 On Windows, you can instead double-click `scripts/start-frontend.bat`. It installs the locked npm dependencies if missing, then starts the app. Initial package installation needs internet access. Do not copy Linux node_modules to Windows; the ZIP intentionally excludes dependencies.
 
+For animation, open **Traveling wave** in Examples or enter `2 * sin(x - t)`, then press **Play** below the graph. Read the [animation guide](documentation/ANIMATION.md) for controls and examples.
+
 The frontend does not require Python, an API key, a database, or a connected backend. All browser features below perform real calculations.
 
 ## What works
 
-| Area | Implemented in v0.1 |
+| Area | Implemented in v0.2 |
 | --- | --- |
 | Graphs | Cartesian, polar, parametric and scalar conditional expressions; multiple independently editable/colorable layers |
-| Interaction | Pan, wheel/button zoom, reset, equal axis scale, fullscreen, coordinate inspection, visible axes and grid |
+| Interaction | Pan, wheel/button zoom, reset, equal axis scale, fullscreen, sampled curve tracing, fit sampled curves, major/minor grid, per-curve line width and style |
+| Animation | Play/pause, restart, scrubbing, frame stepping, speed, time bounds, loop/once/back-and-forth modes and target frame rate |
 | Parameters | Live a/b/c sliders shared by the selected project |
 | Calculus | Numerical derivatives, tangent/derivative overlays, adaptive Simpson integrals with estimated errors, bisection roots with residual checks, local symbolic differentiation |
 | Console | Scalar evaluation, symbolic differentiation, execution history, visible errors, cancellable worker jobs |
-| Projects | Automatic browser recovery; new project; JSON download and reopen; bounded undo/redo; six editable examples |
-| Export | SVG vector graph, PNG at 2× canvas size, sampled CSV with segment identifiers, portable project JSON |
+| Projects | Automatic browser recovery; new project; JSON download and reopen; bounded undo/redo; ten editable examples, including four animated examples |
+| Export | SVG vector graph, PNG at 2× canvas size, sampled CSV with segment identifiers and time, portable project JSON |
 | Appearance | Dark/light themes, adjustable interface font size, responsive panel layout |
 | Optional backend | Authenticated SymPy differentiation, integration, simplification, expansion, factorization and real-domain solving |
 
-Try `sin(x)`, `a * sin(b * x) + c`, `x^2`, `sqrt(abs(x))` or `x < 0 ? -x : x^2`. Polar curves use `theta` (with `t` as an alias), and parametric curves use `t`. Trigonometric input is in radians. The Python grammar requires explicit multiplication and supports the smaller function set documented in `documentation/API.md`.
+Try `sin(x)`, `a * sin(b * x) + c`, `x^2`, `sqrt(abs(x))` or `x < 0 ? -x : x^2`. Polar curves use `theta` (with `t` as an alias), and parametric curves use `u` (or legacy `t`). Use `time` for animation in every graph type; Cartesian graphs also accept `t` as time. Trigonometric input is in radians. The Python grammar requires explicit multiplication and supports the smaller function set documented in `documentation/API.md`.
 
 ## Deploy the frontend on Vercel
 
@@ -121,6 +126,6 @@ On macOS/Linux use `.venv/bin/python` instead. GitHub Actions includes frontend 
 
 The browser uses Float64 arithmetic. Adaptive sampling is heuristic; it does not prove continuity or capture every feature. Extremely oscillatory functions may alias. Numerical integration assumes a smooth finite interval; improper integrals require explicit subdivision and are not supported automatically. Error estimates are method estimates, not certified bounds. Bisection checks the final residual and requires opposite endpoint signs; it does not enumerate roots or generally find even-multiplicity roots. Finite-difference derivatives are not reliable at nonsmooth points.
 
-The project format saves curve definitions, colors, visibility, domains, parameters, sampling, axes and viewport. Console history, temporary calculus overlays and API credentials are session-only. Browser storage is recovery, not a backup; download the JSON to keep a portable copy. New projects and examples can be undone until the page reloads.
+The project format saves curve definitions, colors, visibility, domains, parameters, sampling, axes, viewport and timeline settings/current time. Playback always reopens paused. Console history, temporary calculus overlays and API credentials are session-only. Browser storage is recovery, not a backup; download the JSON to keep a portable copy. New projects and examples can be undone until the page reloads.
 
-Not implemented yet: implicit curves, 3D surfaces, 4D slicing/projections, general ND algorithms, dataset import, animation/video, SQLite project management, collaboration, plugin execution, Tauri or desktop installers. Only implemented graph types and exports are exposed. See [ROADMAP.md](documentation/ROADMAP.md) and [ARCHITECTURE.md](documentation/ARCHITECTURE.md).
+Not implemented yet: implicit curves, 3D surfaces, 4D slicing/projections, general ND algorithms, dataset import, animation keyframes/video export, SQLite project management, collaboration, plugin execution, Tauri or desktop installers. Only implemented graph types and exports are exposed. See [ROADMAP.md](documentation/ROADMAP.md) and [ARCHITECTURE.md](documentation/ARCHITECTURE.md).

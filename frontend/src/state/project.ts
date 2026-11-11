@@ -1,4 +1,7 @@
-import type { Curve, Project, Viewport } from "../mathematics/types";
+import type { AnimationSettings, Curve, Project, Viewport } from "../mathematics/types";
+export const defaultAnimation: AnimationSettings = {
+  time: 0, start: 0, end: 2 * Math.PI, speed: 1, mode: "loop", fps: 30,
+};
 export const palette = ["#83cdbd", "#e8b77a", "#a7a7ec", "#ed91a7", "#89bfe8"];
 export const defaultView: Viewport = {
   xMin: -8,
@@ -21,6 +24,8 @@ export function newCurve(index = 0): Curve {
     visible: true,
     tMin: 0,
     tMax: 2 * Math.PI,
+    lineWidth: 2.5,
+    lineStyle: "solid",
   };
 }
 export function freshProject(): Project {
@@ -37,6 +42,7 @@ export function freshProject(): Project {
     resolution: 480,
     grid: true,
     axes: true,
+    animation: { ...defaultAnimation },
   };
 }
 function finite(value: unknown, min: number, max: number): value is number {
@@ -79,6 +85,9 @@ export function validateProject(value: unknown): Project {
     )
       throw new Error("Invalid curve identity or type.");
     ids.add(c.id);
+    if ((c.lineWidth !== undefined && !finite(c.lineWidth, 1, 6)) ||
+        (c.lineStyle !== undefined && !["solid", "dashed", "dotted"].includes(c.lineStyle)))
+      throw new Error("Invalid curve line style.");
     if (
       typeof c.expression !== "string" ||
       c.expression.length > 300 ||
@@ -117,6 +126,16 @@ export function validateProject(value: unknown): Project {
     typeof p.axes !== "boolean"
   )
     throw new Error("Invalid graph settings.");
+  // Version 1 projects saved before time controls receive compatible defaults.
+  const animation = p.animation === undefined ? { ...defaultAnimation } : p.animation;
+  if (!animation || typeof animation !== "object" ||
+      !finite(animation.start, -1e5, 1e5) || !finite(animation.end, -1e5, 1e5) ||
+      animation.end - animation.start < 0.001 ||
+      !finite(animation.time, animation.start, animation.end) ||
+      !finite(animation.speed, 0.1, 10) ||
+      !["loop", "once", "pingpong"].includes(animation.mode) ||
+      ![15, 30, 60].includes(animation.fps))
+    throw new Error("Invalid timeline. Use ordered bounds, a time inside the range and a positive speed.");
   return {
     schema: "mathverse-x",
     version: 1,
@@ -130,6 +149,8 @@ export function validateProject(value: unknown): Project {
       visible: c.visible,
       tMin: c.tMin,
       tMax: c.tMax,
+      lineWidth: c.lineWidth ?? 2.5,
+      lineStyle: c.lineStyle ?? "solid",
     })),
     viewport: { ...p.viewport },
     parameters: { a: p.parameters.a, b: p.parameters.b, c: p.parameters.c },
@@ -137,6 +158,8 @@ export function validateProject(value: unknown): Project {
     resolution: p.resolution,
     grid: p.grid,
     axes: p.axes,
+    animation: { time: animation.time, start: animation.start, end: animation.end,
+      speed: animation.speed, mode: animation.mode, fps: animation.fps },
   };
 }
 export function parseProject(text: string) {
@@ -151,6 +174,27 @@ export function parseProject(text: string) {
   }
 }
 export const examples = [
+  {
+    name: "Traveling wave", label: "Animate with time · press Play",
+    kind: "cartesian" as const, expression: "a * sin(b * x - t)",
+    a: 2, view: defaultView,
+  },
+  {
+    name: "Standing wave", label: "Two waves, one moving envelope",
+    kind: "cartesian" as const, expression: "2 * sin(x) * cos(t)",
+    secondary: "2 * sin(x)", a: 1, view: defaultView,
+  },
+  {
+    name: "Breathing rose", label: "Polar animation · time + theta",
+    kind: "polar" as const, expression: "(2 + 0.7 * sin(time)) * cos(3 * theta - time)",
+    a: 1, view: { xMin: -4, xMax: 4, yMin: -4, yMax: 4 },
+  },
+  {
+    name: "Morphing Lissajous", label: "Parametric animation · u + time",
+    kind: "parametric" as const, expression: "3 * sin(3 * u + time)",
+    expressionY: "3 * sin(2 * u)", a: 1,
+    view: { xMin: -4, xMax: 4, yMin: -4, yMax: 4 },
+  },
   {
     name: "Wave & parabola",
     label: "Functions & parameters",

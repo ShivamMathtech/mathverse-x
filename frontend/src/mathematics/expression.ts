@@ -23,7 +23,7 @@ const functions = new Set([
   "min",
   "max",
 ]);
-const variables = new Set(["x", "t", "theta", "a", "b", "c", "pi", "e"]);
+const variables = new Set(["x", "t", "u", "theta", "time", "a", "b", "c", "pi", "e"]);
 const operators = new Set([
   "+",
   "-",
@@ -56,7 +56,7 @@ export function validatedNode(expression: string) {
     } else if (n.type === "SymbolNode") {
       const name = (n as unknown as { name: string }).name;
       if (!variables.has(name) && !functions.has(name))
-        throw new Error(`Unknown symbol: ${name}. Use x, t, theta, a, b or c.`);
+        throw new Error(`Unknown symbol: ${name}. Use x, t, time, u, theta, a, b or c.`);
     } else if (n.type === "FunctionNode") {
       if (!functions.has((n as unknown as { name: string }).name))
         throw new Error("This function is not supported.");
@@ -73,32 +73,49 @@ export function validatedNode(expression: string) {
   });
   return node;
 }
+const compilationCache = new Map<string, {
+  compiled: ReturnType<ReturnType<typeof validatedNode>["compile"]>;
+  latex: string;
+}>();
 export function compileScalar(
   expression: string,
   parameters: Record<string, number> = {},
   independent = "x",
+  time = 0,
 ) {
-  const node = validatedNode(expression);
-  node.traverse((n) => {
+  const key = independent + "\u0000" + expression;
+  let cached = compilationCache.get(key);
+  if (!cached) {
+    const node = validatedNode(expression);
+    node.traverse((n) => {
     if (n.type === "SymbolNode") {
       const name = (n as unknown as { name: string }).name;
       if (
-        ["x", "t", "theta"].includes(name) &&
+        ["x", "t", "u", "theta"].includes(name) &&
         name !== independent &&
+        !(independent === "x" && name === "t") &&
+        !(independent === "t" && name === "u") &&
         !(independent === "theta" && name === "t")
       )
         throw new Error(
           `Use ${independent} as the independent variable for this curve.`,
         );
     }
-  });
-  const compiled = node.compile();
+    });
+    cached = { compiled: node.compile(), latex: node.toTex() };
+    if (compilationCache.size >= 80) compilationCache.delete(compilationCache.keys().next().value!);
+    compilationCache.set(key, cached);
+  }
+  const { compiled, latex } = cached;
   const scope = new Map<string, number>(Object.entries(parameters));
+  scope.set("time", time);
+  if (independent === "x") scope.set("t", time);
   return {
-    latex: node.toTex(),
+    latex,
     evaluate(value: number) {
       scope.set(independent, value);
       if (independent === "theta") scope.set("t", value);
+      if (independent === "t") scope.set("u", value);
       try {
         const result: unknown = compiled.evaluate(scope);
         return typeof result === "number" && Number.isFinite(result)

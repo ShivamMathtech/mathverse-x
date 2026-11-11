@@ -1,6 +1,6 @@
 # MATHVERSE X architecture
 
-Repository: `mathverse-x`. First implementation: v0.1.0, Phase 1 foundation.
+Repository: `mathverse-x`. Current implementation: v0.2.0, Phase 1 plus animated 2D graphs.
 
 ## Boundaries
 
@@ -25,7 +25,7 @@ All scalar evaluations must return finite real numbers. Complex/nonfinite values
 
 ## Phase 1 data flow
 
-An expression edit updates a project → the sampling hook sends a serializable request → a worker validates and compiles expressions → samples and diagnostics return → SVG renders them. Outdated jobs are cancelled. Viewport changes resample. Calculus actions use the selected Cartesian layer and current parameters. JSON import validates schema and bounds before it replaces project state. A successful save records the complete project, never credentials.
+An expression edit updates a project → the sampling hook sends a serializable request → a worker validates and compiles expressions → samples and diagnostics return → SVG renders them. Outdated jobs are cancelled. Viewport changes resample. Calculus actions pause playback and use the selected Cartesian layer, current parameters and the rendered time. JSON import validates schema and bounds before it replaces project state. A successful save records the complete project, never credentials.
 
 ## Storage and security
 
@@ -34,3 +34,9 @@ Browser localStorage is best-effort recovery, not a backup; quota failures are s
 ## Extension strategy
 
 Add new graph-object discriminated unions, then pure numerical kernels and tests, worker messages, renderer and inspector controls. Add capability flags only after features have a working implementation. Desktop/Tauri, SQLite project management, MathLive, WebGL rendering and plugin isolation belong to later phases. Do not ship disabled placeholder workspaces.
+
+## Time-driven rendering
+
+`useGraphAnimation` advances an elapsed-time clock with requestAnimationFrame. It keeps one frame in flight through a reused worker; it never queues one worker per display frame. The time label is committed together with its sampled geometry. Slower devices skip intermediate times, and the UI reports observed throughput instead of promising the target frame rate. A revision invalidates a pending frame after seeking or pausing. Project/overlay changes dispose the old worker, and an eight-second deadline terminates stuck work. Compiled expression programs use a bounded 80-entry cache with a separate variable scope per evaluation context.
+
+Runtime playback does not create undo entries or write localStorage each frame. Pause, seek completion, once-mode completion and explicit saves persist the time; settings and line styling are part of project JSON. Playback is never automatically restored. Page visibility changes pause playback and avoid a background-tab time jump. `time` is always the clock, `t` aliases the clock only for Cartesian curves, and `u` aliases the existing parametric `t`.

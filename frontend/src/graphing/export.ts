@@ -22,8 +22,8 @@ export function slug(name: string) {
       .slice(0, 70) || "mathverse-project"
   );
 }
-export function exportCSV(samples: SampledCurve[], project: Project) {
-  const rows = ["curve_id,kind,segment,x,y"];
+export function serializeCSV(samples: SampledCurve[], project: Project) {
+  const rows = ["curve_id,kind,segment,x,y,time"];
   samples.forEach((s) =>
     s.segments.forEach((segment, i) =>
       segment.forEach(([x, y]) =>
@@ -34,6 +34,7 @@ export function exportCSV(samples: SampledCurve[], project: Project) {
             i,
             x,
             y,
+            project.animation.time,
           ]
             .map((v) => '"' + String(v).replaceAll('"', '""') + '"')
             .join(","),
@@ -41,8 +42,11 @@ export function exportCSV(samples: SampledCurve[], project: Project) {
       ),
     ),
   );
+  return rows.join("\r\n");
+}
+export function exportCSV(samples: SampledCurve[], project: Project) {
   download(
-    rows.join("\r\n"),
+    serializeCSV(samples, project),
     `${slug(project.name)}.csv`,
     "text/csv;charset=utf-8",
   );
@@ -66,6 +70,7 @@ export async function exportGraph(
     viewport: project.viewport,
     parameters: project.parameters,
     curves: project.curves,
+    animation: project.animation,
   });
   clone.prepend(desc);
   const source = new XMLSerializer().serializeToString(clone);

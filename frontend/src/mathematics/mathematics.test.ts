@@ -30,7 +30,7 @@ describe("scalar expression boundary", () => {
   it("rejects oversized expressions", () =>
     expect(() => compileScalar("1+".repeat(160) + "1")).toThrow());
   it("rejects wrong independent variables", () =>
-    expect(() => compileScalar("sin(t)", {}, "x")).toThrow());
+    expect(() => compileScalar("sin(theta)", {}, "x")).toThrow());
   it("returns nonfinite for complex values", () =>
     expect(compileScalar("sqrt(x)").evaluate(-1)).toBeNaN());
   it("symbolically differentiates using a known analytical case", () => {

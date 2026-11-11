@@ -10,7 +10,7 @@ self.onmessage = (event: MessageEvent<ComputeRequest>) => {
     else if (request.type === "symbolicDerivative")
       result = differentiate(request.expression);
     else {
-      const f = compileScalar(request.expression, request.parameters).evaluate;
+      const f = compileScalar(request.expression, request.parameters, "x", request.time ?? 0).evaluate;
       if (request.operation === "derivative")
         result = numericalDerivative(f, request.x);
       else if (request.operation === "integral")

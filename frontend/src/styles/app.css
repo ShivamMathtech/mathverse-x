@@ -690,6 +690,54 @@ kbd,
   height: 27px;
   color: var(--muted);
 }
+.plot-controls button[aria-pressed="true"] {
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+.curve-style-fields { margin: 14px 0; }
+.timeline {
+  position: relative;
+  flex-shrink: 0;
+  margin: 0 18px;
+  padding: 11px 14px 9px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel-deep);
+}
+.timeline.is-playing { border-color: var(--accent); }
+.timeline-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.timeline-heading > span:first-child { display: flex; align-items: center; gap: 7px; color: var(--accent); font-size: 0.6rem; letter-spacing: 0.1em; }
+.timeline-rate { font-size: 0.65rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.timeline-demo { margin-left: auto; color: var(--muted); font-size: 0.66rem; }
+.timeline-transport { display: flex; align-items: center; gap: 7px; }
+.timeline-transport > button { flex-shrink: 0; width: 27px; height: 29px; color: var(--muted); }
+.timeline-transport > .timeline-play { width: 34px; height: 34px; color: var(--bg); background: var(--accent); border-radius: 7px; }
+.timeline-time { color: var(--text); font-family: ui-monospace,monospace; font-variant-numeric: tabular-nums; font-size: 0.8rem; white-space: nowrap; min-width: 98px; }
+.timeline-time small { color: var(--muted); margin-left: 4px; }
+.timeline-track { flex: 1; min-width: 70px; padding: 0 5px; }
+.timeline-track input { width: 100%; display: block; height: 15px; margin: 0; accent-color: var(--accent); cursor: pointer; }
+.timeline-track > div { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--subtle); font-variant-numeric: tabular-nums; }
+.timeline-transport > select { width: 62px; min-width: 55px; padding: 5px; font-size: 0.75rem; }
+.timeline-help { font-size: 0.65rem; color: var(--muted); margin-top: 7px; line-height: 1.5; }
+.timeline-help code { color: var(--accent); font-size: inherit; }
+.timeline-settings { position: absolute; bottom: calc(100% + 8px); right: 0; z-index: 30; width: min(360px, 100%); padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); box-shadow: 0 12px 40px #0005; max-height: 60vh; overflow-y: auto; }
+.timeline-settings-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.timeline-settings-title button { color: var(--accent); font-size: 0.75rem; }
+.timeline-settings .field-grid { row-gap: 13px; }
+.timeline-settings > p { margin-top: 13px; line-height: 1.5; }
+@media (max-width: 1200px) {
+  .timeline-step { display: none; }
+  .timeline-demo { max-width: 145px; text-align: right; }
+  .timeline-time { min-width: 90px; }
+}
+@media (max-width: 600px) {
+  .timeline { margin: 0 10px; padding: 10px; }
+  .timeline-demo { font-size: 0.6rem; max-width: 120px; }
+  .timeline-transport { gap: 4px; flex-wrap: wrap; }
+  .timeline-track { order: 2; flex-basis: 100%; margin-top: 5px; }
+  .timeline-step { display: flex; }
+  .timeline-time { flex: 1; }
+}
 .plot-controls button:nth-child(3) {
   border-top: 1px solid var(--line);
   border-radius: 0;
